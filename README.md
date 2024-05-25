@@ -33,10 +33,11 @@ rapidly work on this project. These include the:
 - Parents Image: https://www.pinterest.com/pin/vixels-this-artist-will-turn-you-into-a-pixel-person--348325352413596829/
 - Background: https://imgflip.com/memetemplate/135518796/Jeopardy-Empty-Box
 - Question set: https://www.scribd.com/document/405636501/Wwtbam-Json-File-json
+- Reset icon: https://www.iconfinder.com/icons/211882/refresh_icon
 - The rest of the attributions for various other helps is embedded inside the source code
 
 Known problems (I may think about fixing maybe):
-1. One in every 500 times when the 50/50 button is clicked, 3 questions are removed this is probably easy to fix since I
-remove half of the questions in a hacky manner
+1. One in every 500 or so times when the 50/50 button is clicked, 3 questions are removed this is probably easy to fix 
+since I remove half of the questions in a hacky manner
 2. Sometimes when the Ask the audience button is pressed the program just crashes - this is IMPOSSIBLE to fix (I don't 
 want to change the tkinter pygame compatibility I somewhat have going on here)

@@ -12,7 +12,7 @@ import constants
 
 
 class LevelRenderer:
-
+    # TODO: split this class into question renderer and question list/set renderer
     def __init__(self, question: Questions, font: 'pygame.font', screen_rect, icons_initializer: 'typing.Callable',
                  questions_list: list[tuple['pygame.Surface', 'pygame.Surface']]):
         self.questions = question
@@ -32,12 +32,12 @@ class LevelRenderer:
 
     # "public" methods
     def handle_mouse_click(self, answer_clicked: 'AnswersEnum', screen, BG, end_game_handler: 'EndGame', pygame_instance):  # NOQA
-        if AnswersEnum.convert_from_char(self.questions.answer_letter) == answer_clicked:
+        if AnswersEnum.convert_from_char(self.questions.answer_letter) == answer_clicked:  # Answer correct
             if self.questions.num == 14:
                 end_game_handler.show_win_screen(pygame_instance)
                 self.game_over = True
-                return
-            end_game_handler.show_correct_answer_screen(self._next_question, pygame_instance)
+            else:  # Correct answer, but not the last question
+                end_game_handler.show_correct_answer_screen(self._next_question, pygame_instance)
         else:
             self.game_over = True
             end_game_handler.show_wrong_answer_screen(pygame_instance)
@@ -154,7 +154,7 @@ class LevelRenderer:
         self._display_question_set(screen)
         self._icons_initializer()
         self.render(screen, BG)
-        end_game_handler.is_end_screen_showing = False
+        end_game_handler.is_in_between_questions = False
 
     def _display_question_set(self, screen: 'pygame.Surface'):
         for i in range(constants.num_of_questions):

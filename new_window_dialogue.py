@@ -12,10 +12,9 @@ import constants
 
 
 class NewWindowDialogue(tk.Tk):
-    def __init__(self, title: str, correct_answer: AnswersEnum):
+    def __init__(self, title: str):
         super().__init__()
         self.open = False
-        self.correct_answer = correct_answer
         self.title(title)
         self.withdraw()
         self.protocol('WM_DELETE_WINDOW', self.del_friend_window)
@@ -32,7 +31,8 @@ class NewWindowDialogue(tk.Tk):
 
 class AskAudience(NewWindowDialogue):
     def __init__(self, correct_answer: AnswersEnum):
-        super().__init__(constants.ask_audience_title, correct_answer)
+        super().__init__(constants.ask_audience_title)
+        self.correct_answer: AnswersEnum = correct_answer
         self.geometry('500x450')
 
     def activate(self, correct_answer: AnswersEnum):
@@ -77,9 +77,10 @@ class AskAudience(NewWindowDialogue):
 
 
 class PhoneFriend(NewWindowDialogue):
-    def __init__(self, correct_answer: AnswersEnum):
-        super().__init__(constants.phone_friend_title, correct_answer)
+    def __init__(self, correct_answer: str):
+        super().__init__(constants.phone_friend_title)
         self.geometry('450x150')
+        self.correct_answer: str = correct_answer
         self.img = None
         # TODO: Instead of letter make it the actual answer
         self.people_list = [
@@ -105,8 +106,8 @@ class PhoneFriend(NewWindowDialogue):
         self.rowconfigure(3, weight=7)   # Caption
         self.rowconfigure(4, weight=6)   # Padding
 
-    def activate(self, correct_answer: AnswersEnum):
-        self.correct_answer = correct_answer.convert_to_char()
+    def activate(self, correct_answer: str):
+        self.correct_answer = correct_answer
         self.phone_friend()
         self.deiconify()
         self.open = True
