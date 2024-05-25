@@ -12,26 +12,31 @@ import constants
 
 
 class NewWindowDialogue(tk.Tk):
-    def __init__(self, title: str):
+    def __init__(self, title: str, icon_filepath: str):
         super().__init__()
         self.open = False
         self.title(title)
         self.withdraw()
-        self.protocol('WM_DELETE_WINDOW', self.del_friend_window)
+        self.protocol('WM_DELETE_WINDOW', self.del_window)
+        self.wm_iconphoto(False, tk.PhotoImage(file=icon_filepath, master=self))
         self.resizable(False, False)
 
-    def del_friend_window(self):
+    def del_window(self):
         self.open = False
-        self.destroy()
+        self.withdraw()
 
     @abstractmethod
-    def activate(self, correct_answer: AnswersEnum):
+    def activate(self, correct_answer):
+        pass
+
+    @abstractmethod
+    def reset(self, correct_answer):
         pass
 
 
 class AskAudience(NewWindowDialogue):
     def __init__(self, correct_answer: AnswersEnum):
-        super().__init__(constants.ask_audience_title)
+        super().__init__(constants.ask_audience_title, 'Assets/ask_audience_icon.png')
         self.correct_answer: AnswersEnum = correct_answer
         self.geometry('500x450')
 
@@ -40,6 +45,9 @@ class AskAudience(NewWindowDialogue):
         self.plot_audience(self.correct_answer)
         self.deiconify()
         self.open = True
+
+    def reset(self, correct_answer: AnswersEnum):
+        self.correct_answer: AnswersEnum = correct_answer
 
     def plot_audience(self, answer_letter: str):
         # https://www.geeksforgeeks.org/how-to-embed-matplotlib-charts-in-tkinter-gui/ :+1:
@@ -78,11 +86,10 @@ class AskAudience(NewWindowDialogue):
 
 class PhoneFriend(NewWindowDialogue):
     def __init__(self, correct_answer: str):
-        super().__init__(constants.phone_friend_title)
+        super().__init__(constants.phone_friend_title, 'Assets/phone_friend_icon.png')
         self.geometry('450x150')
         self.correct_answer: str = correct_answer
         self.img = None
-        # TODO: Instead of letter make it the actual answer
         self.people_list = [
             PhonedFriend('Santa', 'Ho! Ho! Ho! The answer must be ', '#F5A2A2', '#F53232', 99,
             ImageTk.PhotoImage(Image.open('Assets/santa.png'))),
@@ -112,6 +119,10 @@ class PhoneFriend(NewWindowDialogue):
         self.deiconify()
         self.open = True
 
+    def reset(self, correct_answer: str):
+        self.correct_answer: str = correct_answer
+        self.img = None
+
     def phone_friend(self):
         chosen_person = choices(self.people_list, k=1, weights=(5, 45, 50))[0]
 
@@ -136,6 +147,7 @@ class PhoneFriend(NewWindowDialogue):
 
     @staticmethod
     def choose_answer(correct_index: int, prb_correct: int):
+        # TODO: I don't think this works they've never been wrong
         if randint(0, 100) < prb_correct:
             return correct_index
         else:

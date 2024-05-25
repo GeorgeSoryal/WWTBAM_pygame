@@ -22,6 +22,8 @@ screen = pg.display.set_mode((850, 450))
 screen_rect = screen.get_rect()
 
 pg.display.set_caption("Who wants to be a Millionaire!")
+window_icon = pg.image.load("Assets/icon.png").convert_alpha()
+pg.display.set_icon(window_icon)
 clock = pg.time.Clock()
 
 BG = pg.image.load("Assets/bg.jpg").convert_alpha()
@@ -70,8 +72,8 @@ def reset():
     icons = Icons(pg, screen)
     renderer = LevelRenderer(questions, font, screen_rect, icons.initialize_icons,
                              LevelRenderer.split_question_list_surfs(questions_list_surf))  # NOQA
-    friend_dialogue = PhoneFriend(questions.answer)
-    ask_audience = AskAudience(AnswersEnum.convert_from_char(questions.answer_letter))
+    friend_dialogue.reset(questions.answer)
+    ask_audience.reset(AnswersEnum.convert_from_char(questions.answer_letter))
 
 
 def clicked(rect, *shown_rects):
@@ -83,9 +85,9 @@ def clicked(rect, *shown_rects):
 def next_step(answer_enum: AnswersEnum, end_game_handler: 'EndGame'):
     renderer.handle_mouse_click(answer_enum, screen, BG, end_game_handler, pg)
     if friend_dialogue.open:
-        friend_dialogue.del_friend_window()
+        friend_dialogue.del_window()
     if ask_audience.open:
-        ask_audience.del_friend_window()
+        ask_audience.del_window()
 
 
 start_time = time.time()
@@ -110,17 +112,18 @@ while True:
 
         elif started:
             if event.type == pg.KEYDOWN or event.type == pg.MOUSEBUTTONDOWN:
-                if renderer.game_over:
+                if renderer.game_over and end_game.is_end_screen_showing:
                     if clicked(end_game.reset_rect):
                         reset()
+                        continue
                     if clicked(end_game.screenshot_rect):
                         # https://stackoverflow.com/questions/6087484/how-to-capture-pygame-screen :+1:
+                        pygame.image.save(screen, f"screenshots/{time.time()}.jpeg")
                         screenshot_text = font.render(f"Screenshot saved as {time.time()}.jpeg in screenshots folder",
                                                       False, "cyan")
                         screenshot_rect = screenshot_text.get_rect(center=(screen_rect.centerx,
                                                                            constants.screenshot_top_margin))
                         screen.blit(screenshot_text, screenshot_rect)
-                        pygame.image.save(screen, f"screenshots/{time.time()}.jpeg")
 
                     else:
                         exit()
@@ -181,7 +184,6 @@ while True:
 
             if end_game.is_end_screen_showing and event.type == pg.MOUSEMOTION and (
                     end_game.reset_rect.collidepoint(pg.mouse.get_pos()) or end_game.screenshot_rect.collidepoint(pg.mouse.get_pos())):  # NOQA
-                print(f"{end_game.screenshot_rect} 111")
                 pg.mouse.set_cursor(pg.SYSTEM_CURSOR_HAND)
 
             if not end_game.is_in_between_questions and event.type == pg.MOUSEMOTION and not (
@@ -190,7 +192,6 @@ while True:
 
             if end_game.is_end_screen_showing and event.type == pg.MOUSEMOTION and not (
                     end_game.reset_rect.collidepoint(pg.mouse.get_pos()) or end_game.screenshot_rect.collidepoint(pg.mouse.get_pos())):  # NOQA
-                print(end_game.screenshot_rect)
                 pg.mouse.set_cursor(pg.SYSTEM_CURSOR_ARROW)
     # end of event loop
 
