@@ -92,8 +92,8 @@ class PhoneFriend(NewWindowDialogue):
         self.img = None
         self.people_list = [
             PhonedFriend('Santa', 'Ho! Ho! Ho! The answer must be ', '#F5A2A2', '#F53232', 99,
-            ImageTk.PhotoImage(Image.open('Assets/santa.png'))),
-            PhonedFriend('Mom', 'If I had to guess I think it would be ', '#FAE879', '#f9f8d9', 75,
+                         ImageTk.PhotoImage(Image.open('Assets/santa.png'))),
+            PhonedFriend('Mom', 'If I had to guess I think it would be ', '#FAE879', '#F9F8D9', 75,
                          ImageTk.PhotoImage(Image.open('Assets/mom.png'))),
             PhonedFriend('Dad', 'Well I suppose the answer would be ', '#33A19D', '#13B1FD', 70,
                          ImageTk.PhotoImage(Image.open('Assets/dad.png')))]

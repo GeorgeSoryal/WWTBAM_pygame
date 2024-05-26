@@ -60,11 +60,7 @@ def reset():
     is_title_cleared = False
     is_levels_initialized = False
     is_pygame_window_focused = False
-    font = pg.font.Font(constants.std_font, constants.questions_font_size)
-    largest_font = pg.font.Font(constants.std_font, constants.title_font_size)
-    larger_font = pg.font.Font(constants.std_font, constants.win_font_size)
-    small_font = pg.font.Font(constants.std_font, constants.caption_font_size)
-    questions = Questions(constants.questions_list)
+    questions.reset(constants.questions_list)
     end_game = EndGame(screen, screen_rect, BG, questions, font, larger_font, small_font)
     windows = windows_handler.WindowsForegroundHandler()
 
@@ -142,7 +138,7 @@ while True:
                         time.time() - start_time > 1) and not end_game.is_in_between_questions:
                     icons.gray_out_ask_the_audience_button()
                     ask_audience.activate(AnswersEnum.convert_from_char(questions.answer_letter))
-                    windows.front(constants.phone_friend_title)
+                    # windows.front(constants.phone_friend_title)
                     pg.mouse.set_cursor(pg.SYSTEM_CURSOR_ARROW)
                 elif clicked(icons.ask_the_audience_rect) and not time.time() - start_time > 2 and not \
                         end_game.is_in_between_questions:

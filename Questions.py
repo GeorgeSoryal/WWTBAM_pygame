@@ -21,6 +21,11 @@ class Questions:
         self.D = 'D)\t' + self.__question_dict[self.num]['D']
         self.answer_letter = self.__question_dict[self.num]['answer']
 
+    def reset(self, question_dict: list[dict[str, str]]):
+        self.__question_dict = question_dict
+        self.num = 0
+        self.fill_dicts()
+
     @property
     def answer(self):
         return self.__question_dict[self.num][self.answer_letter]
